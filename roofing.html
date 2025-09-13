@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Roofing Inquiry</title>
+</head>
+<body>
+  <h1>Roofing Services Inquiry</h1>
+  <form id="inquiryForm">
+    <input type="text" name="name" placeholder="Your Name" required><br>
+    <input type="email" name="email" placeholder="Your Email" required><br>
+    <textarea name="message" placeholder="Your Message" required></textarea><br>
+    <button type="submit">Submit</button>
+  </form>
+  <p id="response"></p>
+
+  <script>
+    // Palitan ng Web App URL mula sa Google Apps Script deployment mo
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzTKdbrjpNKH4SGF7P2Yj5niO-3pd8Oxyu3J2aQb9Q8Ev_bTOf59rLsapy1yTpbfhEy/exec";
+
+    document.getElementById("inquiryForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      // Kunin ang values mula sa form
+      const formData = {
+        name: this.name.value,
+        email: this.email.value,
+        message: this.message.value
+      };
+
+      // POST request sa Google Apps Script
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.json())
+      .then(data => {
+        // Show success message
+        document.getElementById("response").innerText = "✅ Inquiry submitted successfully!";
+        this.reset();
+      })
+      .catch(err => {
+        // Show error message
+        document.getElementById("response").innerText = "❌ Error: " + err.message;
+      });
+    });
+  </script>
+</body>
+</html>
